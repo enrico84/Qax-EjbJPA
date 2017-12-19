@@ -30,7 +30,13 @@ import javax.persistence.TemporalType;
 	@NamedQuery(name="Domanda.findByCategory", query="SELECT d FROM Domanda d WHERE d.categoria.nome = :categoria"),
 	@NamedQuery(name="Domanda.findDomandaRisposte", query="SELECT d, u.idutente, u.nome, r "
 										+ "FROM Domanda d, Utente u, Risposta r "
-										+ "WHERE d.utente.idutente = u.idutente AND r.domanda.iddomanda = d.risposta.domanda.iddomanda AND d.iddomanda = :iddomanda")
+										+ "WHERE d.utente.idutente = u.idutente "
+										//+ "AND r.domanda.iddomanda = d.risposta.domanda.iddomanda "
+										+ "AND r.domanda.iddomanda = d.iddomanda "
+										+ "AND d.iddomanda = :iddomanda"),
+	@NamedQuery(name="Domanda.trovaMieDomande", 
+				query="SELECT d FROM Domanda d, Utente u WHERE "
+						+ "d.utente.idutente = u.idutente AND u.nome = :nome AND u.password = :password")
 })
 public class Domanda implements java.io.Serializable {
 

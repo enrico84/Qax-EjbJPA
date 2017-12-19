@@ -39,7 +39,7 @@ public class CGestioneUtente {
         GregorianCalendar gc = new GregorianCalendar();
         gc.setTime(time);
         
-		loginBean = new LoginBean(ut.getIdutente(), ut.getNome(), ut.getPassword(), ut.getEmail(),
+		loginBean = new LoginBean(ut.getIdutente(), ut.getNome(), ut.getPassword(), ut.getEmail(), 
 				new Data(
            	            gc.get(GregorianCalendar.YEAR),
            	            gc.get(GregorianCalendar.MONTH) + 1,
@@ -55,5 +55,10 @@ public class CGestioneUtente {
 		modificato = utenteDAO.aggiornaUtente(idutente, password, email);
 		
 		return modificato;
+	}
+	
+	
+	public void closeLogicaJPA() {
+		utenteDAO.closeLogicaJPA();
 	}
 }

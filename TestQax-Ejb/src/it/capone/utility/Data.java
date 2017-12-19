@@ -13,9 +13,9 @@ public class Data {
 	private int minuti;
 	private int secondi;
 
-	public Data(){}  //Requisito necessario per usare i JavaBean(tag jsp:useBean )
+	//public Data(){}  //Requisito necessario per usare i JavaBean(tag jsp:useBean )
 	
-	public Data(int anno, int mese, int giorno, int ore, int minuti, int secondi) {
+	public Data() {
 		this.anno = GregorianCalendar.YEAR;
 		this.mese = GregorianCalendar.MONTH + 1;
 		this.giorno = GregorianCalendar.DATE;

@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 import javax.ejb.EJBContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
@@ -26,6 +27,8 @@ public class LogicaJPA {
 	{
 		factory = Persistence.createEntityManagerFactory(persistenceUnitName);
 		em = factory.createEntityManager();
+		//settando il FlushMode a COMMIT si effettua la sincronizzazione col DB solo al Commit della transazione
+		em.setFlushMode(FlushModeType.COMMIT); 
 	}
 	
 	public void create(Object ob)
@@ -43,9 +46,7 @@ public class LogicaJPA {
 				System.out.println("Transazione non riuscita..." +e.getMessage());
 			}
 		}
-		finally {
-			closeLogicaJPA();
-		}
+		
 		
 	}
 	
@@ -53,6 +54,7 @@ public class LogicaJPA {
 	{
 		Query q = null;
 		try {
+			
 			q = em.createQuery(query);
 		}
 		catch(Exception e) {
@@ -62,6 +64,7 @@ public class LogicaJPA {
 				System.out.println("Transazione non riuscita..." +e.getMessage());
 			}
 		}
+		
 		
 		return q;
 	}
@@ -82,6 +85,7 @@ public class LogicaJPA {
 				System.out.println("Transazione non riuscita..." +e.getMessage());
 			}
 		}
+		
 		
 		return q;
 	}
@@ -104,21 +108,20 @@ public class LogicaJPA {
 				System.out.println("Transazione non riuscita..." +e.getMessage());
 			}
 		}
-		finally {
-			closeLogicaJPA();
-		}
 		
 		return update;
 		
 		
 	}
 	
-	public void delete(Object ob)
+	public boolean delete(Object ob)
 	{
+		boolean deleted = false;
 		try {
 			em.getTransaction().begin();
 			em.remove(em.merge(ob));
 			em.getTransaction().commit();
+			deleted = true;
 		}
 		catch(Exception e) {
 			if(em.getTransaction().isActive()) {
@@ -127,9 +130,9 @@ public class LogicaJPA {
 				System.out.println("Transazione non riuscita..." +e.getMessage());
 			}
 		}
-		finally {
-			closeLogicaJPA();
-		}
+		
+		return deleted;
+		
 	}
 	
 	
@@ -148,6 +151,7 @@ public class LogicaJPA {
 			factory.close();
 		
 		//if(em.isOpen())
+			
 			em.close();
 	}
 	

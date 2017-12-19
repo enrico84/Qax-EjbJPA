@@ -17,5 +17,6 @@ public interface UtenteDAOLocal {
 		
 	public boolean aggiornaUtente(int idutente, String password, String email);
 	
+	void closeLogicaJPA();
 
 }

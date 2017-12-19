@@ -57,6 +57,15 @@ private List<RispostaBean> listaRisposte;
 	}
 	
 	
+	public int getDimensione(){
+		int i=0;
+		for(RispostaBean r : this.listaRisposte) {
+			i++;
+		}
+		return i;
+	}
+	
+	
 	public boolean pulisciTutto() {
 		boolean pulito=false;
 		

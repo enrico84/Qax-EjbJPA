@@ -18,18 +18,21 @@ public class MainGestioneUtente {
 		String password = "ghizzo";
 		//verificaUtente(cUt, userId, password);  		    //OK
 		
-		String userId2 = "caio";
-		String password2 = "sempronio";
-		String email2 = "caiosempronio@email.com";
+		String userId2 = "utente Test";
+		String password2 = "testtest";
+		String email2 = "utente_test@gmail.com";
 		//registraUtente(cUt, userId2, password2, email2);   //OK
+		//verificaUtente(cUt, userId2, password2);    //OK
 		
-		//verificaUtente(cUt, userId2, password2);
-		int utenteDaModificare = 4;
+		int idUtenteDaModificare = 4;
+		String nome = "test44";
 		String newPassword = "test4";
-		String newMail = "nuovaMail@hotmail.it";
-		//modificaUtente(cUt, utenteDaModificare, newPassword, newMail);  //OK
+		String newMail = "email_test4@hotmail.it";
+		//modificaUtente(cUt, idUtenteDaModificare, newPassword, newMail);  //OK
+		//verificaUtente(cUt, nome, newPassword);  //OK
 		
-		verificaUtente(cUt, "test", "test4");
+		
+		cUt.closeLogicaJPA();
 		
 	}
 	

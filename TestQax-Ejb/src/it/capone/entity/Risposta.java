@@ -12,6 +12,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -22,6 +24,10 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "risposta", catalog = "qax")
+@NamedQueries({
+	@NamedQuery(name="Risposta.trovaRisposte",
+				query="SELECT r FROM Risposta r WHERE r.domanda.iddomanda = :iddomanda")
+})
 public class Risposta implements java.io.Serializable {
 
 	private Integer idrisposta;

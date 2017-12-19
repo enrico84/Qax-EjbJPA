@@ -9,7 +9,10 @@ import it.capone.bean.DomandaBean;
 import it.capone.bean.ListaDomandeBean;
 import it.capone.bean.ListaRisposteBean;
 import it.capone.bean.LoginBean;
+import it.capone.entity.Categoria;
 import it.capone.entity.Domanda;
+import it.capone.entity.Risposta;
+import it.capone.entity.Utente;
 
 @Local
 public interface DomandaDAOLocal {
@@ -20,30 +23,32 @@ public interface DomandaDAOLocal {
     List<Domanda> getDomande(String categoria);
 	
 	
-	Domanda getDomandaConRisposte(int id);
+    List<Object[]> getDomandaConRisposte(int id);
 	
 	
 	Domanda getDomanda(int id);
 	
 	
-	ListaDomandeBean getMieDomande(String username, String password, ListaDomandeBean myListaDomande);
+	List<Domanda> getMieDomande(String username, String password);
 	
 	
-	void creaDomanda(String titolo, String descrizione, String categoria, LoginBean utente);
-	
-	void creaDomanda(DomandaBean domanda, String titolo, String descrizione, String categoria, LoginBean utente);
+	Domanda creaDomanda(String titolo, String descrizione, String categoria, LoginBean utente);
 	
 	
-	void aggiornaDomanda(CategoriaBean categoriaBean, int iddomanda, String titolo, String descrizione, 
-			                       String categoria);
+	boolean aggiornaDomanda(int iddomanda, String titolo, String descrizione, String categoria);
 	
 	
-	void eliminaDomanda(int idDomanda);
+	boolean eliminaDomanda(int idDomanda);
 	
 	
-	LoginBean prendiUtente(int id);	
+	Utente prendiUtente(int id);	
 	
+	Categoria prendiCategoria(int id);
 	
-	DomandaBean prendiDomanda(int iddomanda);
+	Domanda prendiDomanda(int iddomanda);
+	
+	List<Risposta> getRisposteDomanda(int id);
+	
+	void closeLogicaJPA();
 
 }

@@ -1,6 +1,7 @@
 package it.capone.DAO;
 
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -9,6 +10,7 @@ import javax.persistence.Query;
 
 import it.capone.db.LogicaJPA;
 import it.capone.entity.Utente;
+import it.capone.utility.Data;
 
 
 /**
@@ -60,6 +62,7 @@ public class UtenteDAO implements UtenteDAORemote, UtenteDAOLocal {
 		    date.setHours(ore);
 		    date.setMinutes(minuti);
 		    date.setSeconds(secondi);
+		    
 			ut.setDataregistrazione(date);
 	        
 			// ERRATO INSERIRE L'ID MANUALMENTE, POICHE' LE ENTITA' HANNO COME ATTRIBUTO DI ID -> @GeneratedValue(strategy = IDENTITY)
@@ -68,6 +71,7 @@ public class UtenteDAO implements UtenteDAORemote, UtenteDAOLocal {
 			//ut.setIdutente(maxId);
 			
 			logica.create(ut);
+			
 			
 			return ut;
 		
@@ -88,6 +92,11 @@ public class UtenteDAO implements UtenteDAORemote, UtenteDAOLocal {
 		
 		return modificato;
 
+	}
+	
+	
+	public void closeLogicaJPA() {
+		logica.closeLogicaJPA();
 	}
 
 

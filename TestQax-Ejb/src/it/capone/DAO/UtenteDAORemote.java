@@ -15,5 +15,7 @@ public interface UtenteDAORemote {
 		
 		
 	public boolean aggiornaUtente(int idutente, String password, String email);
+	
+	void closeLogicaJPA();
 
 }

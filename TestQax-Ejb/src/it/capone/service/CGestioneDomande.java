@@ -75,38 +75,7 @@ public class CGestioneDomande {
 		return listaDomande;
 	}
 	
-	////////////// Metodi utilità
 	
-	private CategoriaBean fromCategoryToBean(Categoria cat) {
-        CategoriaBean catBean = new CategoriaBean();
-        catBean.setIdcategoria(cat.getIdcategoria());
-        catBean.setNome(cat.getNome());
-        
-        return catBean;
-    }
-    
-    
-    private LoginBean fromUtenteToBean(Utente ut) {
-        LoginBean utBean = new LoginBean();
-        utBean.setEmail(ut.getEmail());
-        utBean.setIdUtente(ut.getIdutente());
-        utBean.setNome(ut.getNome());
-        utBean.setPassword(ut.getPassword());
-        
-        Date time = ut.getDataregistrazione();
-        GregorianCalendar gc = new GregorianCalendar();
-        gc.setTime(time);
-        
-        utBean.setDataregistrazione(
-                new Data(gc.get(GregorianCalendar.YEAR),
-           	     gc.get(GregorianCalendar.MONTH) + 1,
-           	     gc.get(GregorianCalendar.DATE)
-                    )
-        );
-        return utBean;
-    }
-	
-	////////////////////////////////////
 	
 	public ListaDomandeBean getDomande(ListaDomandeBean listaDomande, String categoria) {
 		
@@ -136,9 +105,13 @@ public class CGestioneDomande {
 	
 	public DomandaBean getDomandaConRisposte(int id, DomandaBean domanda, ListaRisposteBean listaRisposta) {
 		
-		Domanda d = domandaService.getDomandaConRisposte(id);
+		List<Object[]> d = domandaService.getDomandaConRisposte(id);
 		if(d != null) {
-			for(Risposta r: d.getRispostas()) {
+			//for(Risposta r: d.getRispostas()) {
+			for(Object[] dom : d) {
+				
+				Risposta r =  (Risposta) dom[3];
+				
 				Date time = r.getDatacreazione();
 				GregorianCalendar gc = new GregorianCalendar();
 				gc.setTime(time);
@@ -152,36 +125,30 @@ public class CGestioneDomande {
 						           	            gc.get(GregorianCalendar.DATE)
 												), 
 											domandaBean);
+				
+				Domanda doma = new Domanda();
+				Date date = doma.getDatacreazione();
+				GregorianCalendar gcc = new GregorianCalendar();
+				gcc.setTime(date);
+				domanda.setTitolo(doma.getTitolo());
+		        domanda.setDescrizione(doma.getDescrizione());
+		        domanda.setDatacreazione( new Data(
+		            							gcc.get(GregorianCalendar.YEAR),
+				     	            		    gcc.get(GregorianCalendar.MONTH) + 1,
+				     	            		    gcc.get(GregorianCalendar.DATE)
+				     	                 ));
+		         domanda.setUtente(prendiUtente(doma.getUtente().getIdutente()));
+		         domanda.setRisposte(listaRisposta);
 				}
 			
-			Date date = d.getDatacreazione();
-			GregorianCalendar gcc = new GregorianCalendar();
-			gcc.setTime(date);
-			domanda.setTitolo(d.getTitolo());
-	        domanda.setDescrizione(d.getDescrizione());
-	        domanda.setDatacreazione( new Data(
-	            							gcc.get(GregorianCalendar.YEAR),
-			     	            		    gcc.get(GregorianCalendar.MONTH) + 1,
-			     	            		    gcc.get(GregorianCalendar.DATE)
-			     	                 ));
-	         domanda.setUtente(prendiUtente(d.getUtente().getIdutente()));
-	         domanda.setRisposte(listaRisposta);
+			
 			
 			
 		}
 		else { //Nel caso la prima query risulti vuota, ne creo una più semplice con solo le proprietà della Domanda
 			Domanda dd = domandaService.getDomanda(id);
-			Date date = dd.getDatacreazione();
-			GregorianCalendar gcc = new GregorianCalendar();
-			gcc.setTime(date);
-			domanda.setTitolo(dd.getTitolo());
-	        domanda.setDescrizione(dd.getDescrizione());
-	        domanda.setDatacreazione( new Data(
-	            							gcc.get(GregorianCalendar.YEAR),
-			     	            		    gcc.get(GregorianCalendar.MONTH) + 1,
-			     	            		    gcc.get(GregorianCalendar.DATE)
-			     	                 ));
-	         domanda.setUtente(prendiUtente(dd.getUtente().getIdutente()));
+			
+			domanda = fromDomandaToBean(dd);
 		}
 		
 		return domanda;
@@ -191,25 +158,68 @@ public class CGestioneDomande {
 	
 	public ListaDomandeBean getMieDomande(String username, String password, ListaDomandeBean myListaDomande) {
 		
-		domandaService.getMieDomande(username, password, myListaDomande);
+		List<Domanda> domande = domandaService.getMieDomande(username, password);
+		
+		for(Domanda d : domande) {
+            Date time =  d.getDatacreazione();
+            
+            GregorianCalendar gc = new GregorianCalendar();
+            gc.setTime(time);
+            CategoriaBean catBean = fromCategoryToBean(d.getCategoria());
+            LoginBean utBean = fromUtenteToBean(d.getUtente());
+  
+            myListaDomande.creaDomanda(d.getIddomanda(), d.getTitolo(),d.getDescrizione(), 
+                    new Data(
+	       	            gc.get(GregorianCalendar.YEAR),
+	       	            gc.get(GregorianCalendar.MONTH) + 1,
+	       	            gc.get(GregorianCalendar.DATE)
+       	            		), 
+                    catBean, 
+                    utBean);
+        }
+		
+		
 		return myListaDomande;
 		
 	}
 	
 	
 	public void creaDomanda(String titolo, String descrizione, String categoria, LoginBean utente) {
-		domandaService.creaDomanda(titolo, descrizione, categoria, utente);	
-	}
+		Domanda domanda = domandaService.creaDomanda(titolo, descrizione, categoria, utente);
+		DomandaBean domandaBean = new DomandaBean();
+		
+		Date time =  domanda.getDatacreazione();
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTime(time);		
+				
+		domandaBean.setIddomanda(domanda.getIddomanda());
+		domandaBean.setTitolo(domanda.getTitolo());
+		domandaBean.setDescrizione(domanda.getDescrizione());
+		CategoriaBean categoriaBean = fromCategoryToBean(domanda.getCategoria()); //Creo la categoria del Bean
+		domandaBean.setCategoria(categoriaBean);
+		LoginBean utenteBean = fromUtenteToBean(domanda.getUtente());	//Creo l'utente del Bean
+		domandaBean.setUtente(utenteBean);
+		
+		//Setto la data del Bean
+		domandaBean.setDatacreazione(
+				new Data(
+           	            gc.get(GregorianCalendar.YEAR),
+           	            gc.get(GregorianCalendar.MONTH) + 1,
+           	            gc.get(GregorianCalendar.DATE)
+           	            ));
+		
+	} 
 	
 	
-	public void creaDomanda(DomandaBean domanda, String titolo, String descrizione, String categoria, LoginBean utente) {
-		domandaService.creaDomanda(domanda, titolo, descrizione, categoria, utente);
-	}
 	
-	
-	public void aggiornaDomanda(CategoriaBean categoriaBean, int iddomanda, String titolo, String descrizione, 
+	public boolean aggiornaDomanda(CategoriaBean categoriaBean, int iddomanda, String titolo, String descrizione, 
 			                       String categoria) {
-		domandaService.aggiornaDomanda(categoriaBean, iddomanda, titolo, descrizione, categoria);
+		boolean modificato;
+		
+		modificato = domandaService.aggiornaDomanda(iddomanda, titolo, descrizione, categoria);
+		//CategoriaBean categoriaBean = prendiCategoria(idcat) 
+		
+		return modificato;
 		
 	}
 	
@@ -219,19 +229,100 @@ public class CGestioneDomande {
 	}
 	
 	
+	
 	public LoginBean prendiUtente(int id) {
-		LoginBean utente = domandaService.prendiUtente(id);
+		Utente utente = domandaService.prendiUtente(id);
 		
-		return utente;
+		LoginBean utBean = fromUtenteToBean(utente);
+		return utBean;
+	}
+	
+	
+	public CategoriaBean prendiCategoria(int idcat) {
+		Categoria cat = domandaService.prendiCategoria(idcat);
+		
+		CategoriaBean catBean = fromCategoryToBean(cat);
+		
+		return catBean;	
 	}
 	
 	
 	public DomandaBean prendiDomanda(int iddomanda) {
-		DomandaBean domanda = domandaService.prendiDomanda(iddomanda);
-	
-		return domanda;	
+		Domanda domanda = domandaService.prendiDomanda(iddomanda);
+		DomandaBean domandaBean = fromDomandaToBean(domanda);
+		
+		return domandaBean;	
 	}
 	
 	
+	public void closeLogicaJPA() {
+		domandaService.closeLogicaJPA();
+	}
+	
+//////////////Metodi utilit�////////////////////////////////
+	
+	/**
+	* 
+	* @param cat
+	* @return Converte una Entity Categoria in un bean -> CategoriaBean
+	*/
+	private CategoriaBean fromCategoryToBean(Categoria cat) {
+		CategoriaBean catBean = new CategoriaBean();
+		catBean.setIdcategoria(cat.getIdcategoria());
+		catBean.setNome(cat.getNome());
+		
+		return catBean;
+	}
+
+
+	/**
+	* 
+	* @param ut
+	* @return Converte una Entity Utente in un bean -> LoginBean
+	*/
+	private LoginBean fromUtenteToBean(Utente ut) {
+		LoginBean utBean = new LoginBean();
+		utBean.setEmail(ut.getEmail());
+		utBean.setIdUtente(ut.getIdutente());
+		utBean.setNome(ut.getNome());
+		utBean.setPassword(ut.getPassword());
+		
+//		Date time = ut.getDataregistrazione();
+//		GregorianCalendar gc = new GregorianCalendar();
+//		gc.setTime(time);
+//		
+//		utBean.setDataregistrazione(
+//		     new Data(gc.get(GregorianCalendar.YEAR),
+//			     gc.get(GregorianCalendar.MONTH) + 1,
+//			     gc.get(GregorianCalendar.DATE)
+//		         )
+//		);
+	return utBean;
+	}
+
+
+	/**
+	* 
+	* @param dom
+	* @return Converte una Entity Domanda in un bean -> DomandaBean
+	*/
+	private DomandaBean fromDomandaToBean(Domanda dom) {
+		DomandaBean domBean = new DomandaBean();
+		domBean.setTitolo(dom.getTitolo());
+		domBean.setDescrizione(dom.getDescrizione());
+		domBean.setUtente(prendiUtente(dom.getUtente().getIdutente()));
+		
+		Date date = dom.getDatacreazione();
+		GregorianCalendar gcc = new GregorianCalendar();
+		gcc.setTime(date);
+		
+		domBean.setDatacreazione( new Data(
+		 							gcc.get(GregorianCalendar.YEAR),
+		  	            		    gcc.get(GregorianCalendar.MONTH) + 1,
+		  	            		    gcc.get(GregorianCalendar.DATE)
+		  	                 ));
+		return domBean;
+	}
+////////////////////////////////////
 
 }
