@@ -29,28 +29,26 @@ public class MainGestioneDomande {
         //int idDomanda = 18; 
         //modificaDomanda(cgd, categoriaBean, idDomanda, "Update della domanda numero 18", "Update della domanda 18 di Gianni Ghizzo", "tempo libero"); //OK
         
-        cgd.eliminaDomanda(19); //OK
-        ListaDomandeBean listaDomande = cgd.getMieDomande("gianni", "ghizzo", listaDomandeFirst);  //OK  
+        //cgd.eliminaDomanda(19); //OK
+        //ListaDomandeBean listaDomande = cgd.getMieDomande("gianni", "ghizzo", listaDomandeFirst);  //OK  
         
-        
-        DomandaBean[] domande = (DomandaBean[]) listaDomande.getListaDomande().
-		toArray(new DomandaBean[listaDomande.getDimensione()]);        
+        //DomandaBean[] domande = (DomandaBean[]) listaDomande.getListaDomande().
+		//toArray(new DomandaBean[listaDomande.getDimensione()]);        
         //stampaDomande(domande);
+	
+        int id = 76;
+        DomandaBean domandaBean = null;
+        ListaRisposteBean listaRisposte = new ListaRisposteBean();
+        DomandaBean domanda = cgd.getDomandaConRisposte(id, domandaBean, listaRisposte);
         
+        stampaDomandaRisposte(domanda);
         
         //OPERAZIONE DA EFFETTUARE SEMPRE ALLA FINE PER CHIUDERE L'ENTITY MANAGER
         cgd.closeLogicaJPA();
-	
-//        int id = 1;
-//        DomandaBean domandaBean = null;
-//        ListaRisposteBean listaRisposte = null;
-//        DomandaBean domanda = cgd.getDomandaConRisposte(id, domandaBean, listaRisposte);
-//        
-//        stampaDomandaRisposte(domanda);
           
-
 	} 
 
+	
 	public static void stampaDomande(DomandaBean[] listaDomande) {
 		for(int i=0; i<listaDomande.length; i++) {
 			System.out.println("Titolo domanda: " +listaDomande[i].getTitolo()
@@ -59,21 +57,24 @@ public class MainGestioneDomande {
 		}
 	}
 	
+	
 	public static void stampaDomandaRisposte(DomandaBean domanda) {
 		System.out.println("Titolo domanda: " +domanda.getTitolo()
 		+"\nDescrizione: " +domanda.getDescrizione()+""
 		+ "\nUtente " +domanda.getUtente());
 		
-		if(!domanda.getRisposte().isEmpty()) {
-			ListaRisposteBean listaRisposte = domanda.getRisposte();
-			
-			for(RispostaBean r : listaRisposte.getListaRisposte()) {
-				System.out.println("Risposta: " +r.getDescrizione()+ " in data " +r.getDataCreazione()+ 
-						"data dall'utente " +r.getUtente().getNome());
+		if(domanda.getRisposte() != null) {
+			if(!domanda.getRisposte().isEmpty()) {
+				ListaRisposteBean listaRisposte = domanda.getRisposte();
+				
+				for(RispostaBean r : listaRisposte.getListaRisposte()) {
+					System.out.println("Risposta: " +r.getDescrizione()+ " in data " +r.getDataCreazione()+ 
+							" dell'utente " +r.getUtente().getNome());
+				}
 			}
+			else 
+				System.out.println("La domanda non ha avuto ancora risposte");
 		}
-		else 
-			System.out.println("La domanda non ha avuto ancora risposte");
 	}
 	
 	

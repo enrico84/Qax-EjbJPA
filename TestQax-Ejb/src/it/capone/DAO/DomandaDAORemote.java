@@ -23,7 +23,7 @@ public interface DomandaDAORemote {
     List<Domanda> getDomande(String categoria);
 	
 	
-    List<Object[]> getDomandaConRisposte(int id);
+    //List<Object[]> getDomandaConRisposte(int id);
 	
 	
 	Domanda getDomanda(int id);
@@ -43,8 +43,6 @@ public interface DomandaDAORemote {
 	Utente prendiUtente(int id);	
 	
 	Categoria prendiCategoria(int id);
-	
-	Domanda prendiDomanda(int iddomanda);
 	
 	List<Risposta> getRisposteDomanda(int id);
 	

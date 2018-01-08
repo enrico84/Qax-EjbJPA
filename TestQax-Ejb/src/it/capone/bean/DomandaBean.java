@@ -108,7 +108,7 @@ public class DomandaBean {
     
     
     public String getErrorMsg() {
-		return "Uno o piÃ¹ campi non validi";
+		return "Uno o più campi non validi";
 	}
 	
 	

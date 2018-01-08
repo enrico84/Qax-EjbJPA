@@ -40,7 +40,13 @@ public class DomandaDAO implements DomandaDAORemote, DomandaDAOLocal {
 	@Override
 	public List<Domanda> getDomande() {
 		
-		List<Domanda> domande = logica.readNameQuery("Domanda.findAll").setMaxResults(10).getResultList();
+		List<Domanda> domande = null;
+		try {
+			domande = logica.readNameQuery("Domanda.findAll").setMaxResults(10).getResultList();
+    	}
+    	catch(NoResultException nores) {
+    		domande = new ArrayList<Domanda>();
+    	}
 		
 		return domande;
 	}
@@ -50,9 +56,15 @@ public class DomandaDAO implements DomandaDAORemote, DomandaDAOLocal {
 	public List<Domanda> getDomande(String categoria) {
 		Query q = logica.readNameQuery("Domanda.findByCategory");
 		q.setParameter("categoria", categoria);
-		List<Domanda> domande = (List<Domanda>) q.getResultList(); 
-
-		//logica.closeLogicaJPA();
+		List<Domanda> domande = null;
+		
+		try {
+			domande = (List<Domanda>) q.getResultList();
+    	}
+    	catch(NoResultException nores) {
+    		domande = new ArrayList<Domanda>();
+    	}
+		
 		return domande;
 	}
 	
@@ -61,7 +73,15 @@ public class DomandaDAO implements DomandaDAORemote, DomandaDAOLocal {
 	public Domanda getDomanda(int id) {
 		Query q =  logica.readNameQuery("Domanda.findById");
     	q.setParameter("iddomanda", id);
-    	Domanda domanda = (Domanda) q.getSingleResult();
+    	Domanda domanda = null;
+    	
+    	try {
+    		domanda = (Domanda) q.getSingleResult();
+    	}
+    	catch(NoResultException nores) {
+    		domanda = new Domanda();
+    	}
+    	
     	
     	return domanda;
 	}
@@ -71,7 +91,15 @@ public class DomandaDAO implements DomandaDAORemote, DomandaDAOLocal {
 	public List<Risposta> getRisposteDomanda(int id) {
 		Query q =  logica.readNameQuery("Risposta.trovaRisposte");
     	q.setParameter("iddomanda", id);
-    	List<Risposta> risposte = (ArrayList<Risposta>) q.getResultList();
+    	List<Risposta> risposte = null;
+    	
+    	try {
+    		risposte = (ArrayList<Risposta>) q.getResultList();
+    	}
+    	catch(NoResultException nores) {
+    		risposte = new ArrayList<Risposta>();
+    	}
+    	
     	
     	return risposte;
 	}
@@ -82,7 +110,15 @@ public class DomandaDAO implements DomandaDAORemote, DomandaDAOLocal {
 		Query q = logica.readNameQuery("Domanda.trovaMieDomande");
 		q.setParameter("nome", username);
 		q.setParameter("password", password);
-		List<Domanda> domande = (ArrayList<Domanda>) q.getResultList(); 
+		List<Domanda> domande = null; 
+		
+		try {
+			domande = (ArrayList<Domanda>) q.getResultList();
+    	}
+    	catch(NoResultException nores) {
+    		domande = new ArrayList<Domanda>();
+    	}
+		
 		return domande;
 	}
 
@@ -165,7 +201,7 @@ public class DomandaDAO implements DomandaDAORemote, DomandaDAOLocal {
 	public boolean eliminaDomanda(int idDomanda) {
 		boolean cancellata = false;
 		List<Risposta> risposte = (List<Risposta>) getRisposteDomanda(idDomanda);
-		Domanda domandaDaEliminare = (Domanda) prendiDomanda(idDomanda);
+		Domanda domandaDaEliminare = (Domanda) getDomanda(idDomanda);
 		if(risposte.size() > 0) {
 			for(Risposta r : risposte)
 				logica.delete(r);
@@ -182,8 +218,13 @@ public class DomandaDAO implements DomandaDAORemote, DomandaDAOLocal {
 		
 		Query q =  logica.readNameQuery("Utente.findById");
     	q.setParameter("idutente", id);
-    	Utente utente = (Utente) q.getSingleResult();
-    	
+    	Utente utente = null;
+    	try {
+    		utente = (Utente) q.getSingleResult();
+    	}
+    	catch(NoResultException nores) {
+    		utente = new Utente();
+    	}
     	return utente;	
 	}
 	
@@ -197,7 +238,7 @@ public class DomandaDAO implements DomandaDAORemote, DomandaDAOLocal {
     		categoria = (Categoria) q.getSingleResult();
     	}
     	catch(NoResultException nores) {
-    		categoria = null;
+    		categoria = new Categoria();
     	}
     	
     	return categoria;	
@@ -212,19 +253,11 @@ public class DomandaDAO implements DomandaDAORemote, DomandaDAOLocal {
     		categoria = (Categoria) q.getSingleResult();
     	}
     	catch(NoResultException nores) {
-    		categoria = null;
+    		categoria = new Categoria();
     	}
     	
     	return categoria;	
 		
-	}
-	
-
-	@Override
-	public Domanda prendiDomanda(int iddomanda) {
-		Domanda domanda = getDomanda(iddomanda);
-		
-		return domanda;
 	}
 	
 	
@@ -243,13 +276,6 @@ public class DomandaDAO implements DomandaDAORemote, DomandaDAOLocal {
 	
 	public void closeLogicaJPA() {
 		logica.closeLogicaJPA();
-	}
-
-
-	@Override
-	public List<Object[]> getDomandaConRisposte(int id) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	

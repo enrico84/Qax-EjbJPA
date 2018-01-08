@@ -105,51 +105,50 @@ public class CGestioneDomande {
 	
 	public DomandaBean getDomandaConRisposte(int id, DomandaBean domanda, ListaRisposteBean listaRisposta) {
 		
-		List<Object[]> d = domandaService.getDomandaConRisposte(id);
-		if(d != null) {
-			//for(Risposta r: d.getRispostas()) {
-			for(Object[] dom : d) {
+		
+		Domanda d = domandaService.getDomanda(id);
+		domanda = prendiDomanda(id);
+		
+		if(domanda != null) {
+			if((domanda.getTitolo() != null) && (domanda.getDescrizione() != null)) {
 				
-				Risposta r =  (Risposta) dom[3];
+				List<Risposta> answers = (List<Risposta>) domandaService.getRisposteDomanda(id);
 				
-				Date time = r.getDatacreazione();
-				GregorianCalendar gc = new GregorianCalendar();
-				gc.setTime(time);
-				
-				LoginBean utBean = fromUtenteToBean(r.getUtente());
-				DomandaBean domandaBean = prendiDomanda(id);
-				listaRisposta.creaRisposta(r.getIdrisposta(), r.getDescrizione(), utBean, 
-											new Data(
-						           	            gc.get(GregorianCalendar.YEAR),
-						           	            gc.get(GregorianCalendar.MONTH) + 1,
-						           	            gc.get(GregorianCalendar.DATE)
-												), 
-											domandaBean);
-				
-				Domanda doma = new Domanda();
-				Date date = doma.getDatacreazione();
+				Date date = d.getDatacreazione();
 				GregorianCalendar gcc = new GregorianCalendar();
 				gcc.setTime(date);
-				domanda.setTitolo(doma.getTitolo());
-		        domanda.setDescrizione(doma.getDescrizione());
+				
+				domanda.setTitolo(d.getTitolo());
+		        domanda.setDescrizione(d.getDescrizione());
 		        domanda.setDatacreazione( new Data(
 		            							gcc.get(GregorianCalendar.YEAR),
 				     	            		    gcc.get(GregorianCalendar.MONTH) + 1,
 				     	            		    gcc.get(GregorianCalendar.DATE)
 				     	                 ));
-		         domanda.setUtente(prendiUtente(doma.getUtente().getIdutente()));
+		         domanda.setUtente(prendiUtente(d.getUtente().getIdutente()));
+		         
+		         if(!answers.isEmpty()) {
+						for(Risposta a : answers) {
+							Date time = a.getDatacreazione();
+							GregorianCalendar gc = new GregorianCalendar();
+							gc.setTime(time);
+							LoginBean utBean = fromUtenteToBean(a.getUtente());
+							listaRisposta.creaRisposta(a.getIdrisposta(), a.getDescrizione(), utBean, 
+									new Data(
+				           	            gc.get(GregorianCalendar.YEAR),
+				           	            gc.get(GregorianCalendar.MONTH) + 1,
+				           	            gc.get(GregorianCalendar.DATE)
+										), 
+									domanda);
+						}
+					}
+		         
 		         domanda.setRisposte(listaRisposta);
-				}
-			
-			
-			
+				
+			}
 			
 		}
-		else { //Nel caso la prima query risulti vuota, ne creo una più semplice con solo le proprietà della Domanda
-			Domanda dd = domandaService.getDomanda(id);
-			
-			domanda = fromDomandaToBean(dd);
-		}
+		
 		
 		return domanda;
 	}
@@ -217,7 +216,6 @@ public class CGestioneDomande {
 		boolean modificato;
 		
 		modificato = domandaService.aggiornaDomanda(iddomanda, titolo, descrizione, categoria);
-		//CategoriaBean categoriaBean = prendiCategoria(idcat) 
 		
 		return modificato;
 		
@@ -238,17 +236,8 @@ public class CGestioneDomande {
 	}
 	
 	
-	public CategoriaBean prendiCategoria(int idcat) {
-		Categoria cat = domandaService.prendiCategoria(idcat);
-		
-		CategoriaBean catBean = fromCategoryToBean(cat);
-		
-		return catBean;	
-	}
-	
-	
 	public DomandaBean prendiDomanda(int iddomanda) {
-		Domanda domanda = domandaService.prendiDomanda(iddomanda);
+		Domanda domanda = domandaService.getDomanda(iddomanda);
 		DomandaBean domandaBean = fromDomandaToBean(domanda);
 		
 		return domandaBean;	
@@ -308,19 +297,24 @@ public class CGestioneDomande {
 	*/
 	private DomandaBean fromDomandaToBean(Domanda dom) {
 		DomandaBean domBean = new DomandaBean();
-		domBean.setTitolo(dom.getTitolo());
-		domBean.setDescrizione(dom.getDescrizione());
-		domBean.setUtente(prendiUtente(dom.getUtente().getIdutente()));
+		if(dom.getTitolo() != null && dom.getDescrizione() != null && 
+		   dom.getUtente().getIdutente() != null && dom.getDatacreazione() != null) {
+			
+			domBean.setTitolo(dom.getTitolo());
+			domBean.setDescrizione(dom.getDescrizione());
+			domBean.setUtente(prendiUtente(dom.getUtente().getIdutente()));
+			
+			Date date = dom.getDatacreazione();
+			GregorianCalendar gcc = new GregorianCalendar();
+			gcc.setTime(date);
+			
+			domBean.setDatacreazione( new Data(
+			 							gcc.get(GregorianCalendar.YEAR),
+			  	            		    gcc.get(GregorianCalendar.MONTH) + 1,
+			  	            		    gcc.get(GregorianCalendar.DATE)
+			  	                 ));
+		}
 		
-		Date date = dom.getDatacreazione();
-		GregorianCalendar gcc = new GregorianCalendar();
-		gcc.setTime(date);
-		
-		domBean.setDatacreazione( new Data(
-		 							gcc.get(GregorianCalendar.YEAR),
-		  	            		    gcc.get(GregorianCalendar.MONTH) + 1,
-		  	            		    gcc.get(GregorianCalendar.DATE)
-		  	                 ));
 		return domBean;
 	}
 ////////////////////////////////////
