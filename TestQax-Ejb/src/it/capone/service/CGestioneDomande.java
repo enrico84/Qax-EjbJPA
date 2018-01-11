@@ -12,14 +12,14 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import it.capone.DAO.DomandaDAO;
-import it.capone.DAO.DomandaDAOLocal;
-import it.capone.DAO.DomandaDAORemote;
 import it.capone.bean.CategoriaBean;
 import it.capone.bean.DomandaBean;
 import it.capone.bean.ListaDomandeBean;
 import it.capone.bean.ListaRisposteBean;
 import it.capone.bean.LoginBean;
+import it.capone.dao.DomandaDAO;
+import it.capone.dao.DomandaDAOLocal;
+import it.capone.dao.DomandaDAORemote;
 import it.capone.entity.Categoria;
 import it.capone.entity.Domanda;
 import it.capone.entity.Utente;
@@ -139,7 +139,9 @@ public class CGestioneDomande {
 				           	            gc.get(GregorianCalendar.MONTH) + 1,
 				           	            gc.get(GregorianCalendar.DATE)
 										), 
-									domanda);
+									domanda,
+									a.getVoto()
+									);
 						}
 					}
 		         

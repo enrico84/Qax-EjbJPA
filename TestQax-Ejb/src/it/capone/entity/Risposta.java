@@ -35,6 +35,7 @@ public class Risposta implements java.io.Serializable {
 	private Utente utente;
 	private String descrizione;
 	private Date datacreazione;
+	private Integer voto;
 	private Set<Commentorisposta> commentorispostas = new HashSet<Commentorisposta>(0);
 	private Set<Domanda> domandas = new HashSet<Domanda>(0);
 
@@ -106,6 +107,15 @@ public class Risposta implements java.io.Serializable {
 
 	public void setDatacreazione(Date datacreazione) {
 		this.datacreazione = datacreazione;
+	}
+	
+	@Column(name = "voto", nullable = true, length = 11)
+	public Integer getVoto() {
+		return this.voto;
+	}
+
+	public void setVoto(Integer voto) {
+		this.voto = voto;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "risposta")

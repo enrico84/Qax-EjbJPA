@@ -1,4 +1,4 @@
-package it.capone.DAO;
+package it.capone.dao;
 
 import java.util.List;
 
@@ -21,9 +21,6 @@ public interface DomandaDAOLocal {
 	
 	
     List<Domanda> getDomande(String categoria);
-	
-	
-    //List<Object[]> getDomandaConRisposte(int id);
 	
 	
 	Domanda getDomanda(int id);

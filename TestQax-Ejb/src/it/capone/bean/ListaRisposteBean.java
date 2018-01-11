@@ -19,8 +19,8 @@ private List<RispostaBean> listaRisposte;
 	}
 	
 	
-	public void creaRisposta(int idrisposta, String descrizione, LoginBean utente, Data datacreazione, DomandaBean domanda) {
-		RispostaBean risposta = new RispostaBean(idrisposta, descrizione, utente, datacreazione, domanda);
+	public void creaRisposta(int idrisposta, String descrizione, LoginBean utente, Data datacreazione, DomandaBean domanda, Integer voto) {
+		RispostaBean risposta = new RispostaBean(idrisposta, descrizione, utente, datacreazione, domanda, voto);
 		this.listaRisposte.add(risposta);
 	}
 	

@@ -1,12 +1,13 @@
-package it.capone.DAO;
+package it.capone.dao;
 
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 import it.capone.bean.LoginBean;
 import it.capone.entity.Utente;
 
-@Remote
-public interface UtenteDAORemote {
+@Local
+public interface UtenteDAOLocal {
+	
 	
 	public Utente verifyUtente(String userId, String password);
 	

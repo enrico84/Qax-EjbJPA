@@ -9,13 +9,15 @@ public class RispostaBean {
 	private LoginBean utente;
 	private Data dataCreazione;
 	private DomandaBean domanda;
+	private Integer voto;
 	
-	public RispostaBean(int idrisposta, String descrizione, LoginBean utente, Data data, DomandaBean domanda) {
+	public RispostaBean(int idrisposta, String descrizione, LoginBean utente, Data data, DomandaBean domanda, Integer voto) {
 		this.idrisposta = idrisposta;
 		this.descrizione = descrizione;
 		this.utente = utente;
 		this.dataCreazione = data;
 		this.domanda = domanda;
+		this.voto = voto;
 	}
 
 	
@@ -84,6 +86,15 @@ public class RispostaBean {
 	}
 
 	
+	public Integer getVoto() {
+		return voto;
+	}
+
+
+	public void setVoto(Integer voto) {
+		this.voto = voto;
+	}
+	
 
 
 	/* (non-Javadoc)
@@ -92,7 +103,7 @@ public class RispostaBean {
 	@Override
 	public String toString() {
 		return "RispostaBean [descrizione=" + descrizione + ", utente= " + utente.getNome()
-				+ ", dataCreazione=" + dataCreazione + ", domanda= " + domanda.getTitolo() + "]";
+				+ ", dataCreazione=" + dataCreazione + "votazione=" +voto+ ", domanda= " + domanda.getTitolo() + "]";
 	}
 
 

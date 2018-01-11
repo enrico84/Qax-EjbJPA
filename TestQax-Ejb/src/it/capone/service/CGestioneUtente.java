@@ -3,9 +3,9 @@ package it.capone.service;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import it.capone.DAO.UtenteDAO;
-import it.capone.DAO.UtenteDAORemote;
 import it.capone.bean.LoginBean;
+import it.capone.dao.UtenteDAO;
+import it.capone.dao.UtenteDAORemote;
 import it.capone.entity.Utente;
 import it.capone.utility.Data;
 

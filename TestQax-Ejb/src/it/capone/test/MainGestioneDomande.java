@@ -36,7 +36,7 @@ public class MainGestioneDomande {
 		//toArray(new DomandaBean[listaDomande.getDimensione()]);        
         //stampaDomande(domande);
 	
-        int id = 76;
+        int id = 17;
         DomandaBean domandaBean = null;
         ListaRisposteBean listaRisposte = new ListaRisposteBean();
         DomandaBean domanda = cgd.getDomandaConRisposte(id, domandaBean, listaRisposte);
@@ -68,8 +68,12 @@ public class MainGestioneDomande {
 				ListaRisposteBean listaRisposte = domanda.getRisposte();
 				
 				for(RispostaBean r : listaRisposte.getListaRisposte()) {
+					int voto = r.getVoto();
+					if( (voto == 0) ) {
+						voto=0;
+					}
 					System.out.println("Risposta: " +r.getDescrizione()+ " in data " +r.getDataCreazione()+ 
-							" dell'utente " +r.getUtente().getNome());
+							" dell'utente " +r.getUtente().getNome()+ ", ha avuto " +voto+ " voti");
 				}
 			}
 			else 
