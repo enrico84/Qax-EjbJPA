@@ -18,7 +18,7 @@ public class MainGestioneDomande {
 		CGestioneDomande cgd = new CGestioneDomande();
         ListaDomandeBean listaDomandeFirst = new ListaDomandeBean();
         
-        //ListaDomandeBean listaDomande = cgd.getDomande(listaDomandeFirst);  		//OK
+        ListaDomandeBean listaDomande = cgd.getDomande(listaDomandeFirst);  		//OK
         //ListaDomandeBean listaDomande = cgd.getDomande(listaDomandeFirst, "Java");  //OK
         
         //LoginBean utenteBean = cgd.prendiUtente(2);
@@ -32,16 +32,16 @@ public class MainGestioneDomande {
         //cgd.eliminaDomanda(19); //OK
         //ListaDomandeBean listaDomande = cgd.getMieDomande("gianni", "ghizzo", listaDomandeFirst);  //OK  
         
-        //DomandaBean[] domande = (DomandaBean[]) listaDomande.getListaDomande().
-		//toArray(new DomandaBean[listaDomande.getDimensione()]);        
-        //stampaDomande(domande);
+        DomandaBean[] domande = (DomandaBean[]) listaDomande.getListaDomande().
+		toArray(new DomandaBean[listaDomande.getDimensione()]);        
+        stampaDomande(domande);
 	
-        int id = 17;
-        DomandaBean domandaBean = null;
-        ListaRisposteBean listaRisposte = new ListaRisposteBean();
-        DomandaBean domanda = cgd.getDomandaConRisposte(id, domandaBean, listaRisposte);
-        
-        stampaDomandaRisposte(domanda);
+//        int id = 17;
+//        DomandaBean domandaBean = null;
+//        ListaRisposteBean listaRisposte = new ListaRisposteBean();
+//        DomandaBean domanda = cgd.getDomandaConRisposte(id, domandaBean, listaRisposte);
+//        
+//        stampaDomandaRisposte(domanda);
         
         //OPERAZIONE DA EFFETTUARE SEMPRE ALLA FINE PER CHIUDERE L'ENTITY MANAGER
         cgd.closeLogicaJPA();
